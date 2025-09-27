@@ -1,18 +1,20 @@
 
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class LibraryApp{
 
         public static void main(String[] args) {
-            Book mybook = new Book("sakamoto Days", "sakamoto", "Action,Anime", 200, LocalDate.of(2022, 9, 24));
+            // Book mybook = new Book("sakamoto Days", "sakamoto", ["anime"], 200, LocalDate.of(2022, 9, 24));
         
-            System.out.println("Book Name : "+mybook.getName());
+            // System.out.println("Book Name : "+mybook.getName());
 
-            mybook.setPrice(199.50f);
+            // mybook.setPrice(199.50f);
 
-            System.out.println("Price : "+mybook.getPrice());
+            // System.out.println("Price : "+mybook.getPrice());
 
             Scanner sc = new Scanner(System.in);
             Library library = new Library();
@@ -37,13 +39,29 @@ public class LibraryApp{
                         System.out.print("Enter the Name of book : ");
                         String bname = vval.nextLine();
 
-                        System.out.println("Enter the Name of Author : ");
+                        System.out.print("Enter the Name of Author : ");
                         String bAuthor = vval.nextLine();
 
-                        System.out.println("Enter the Topic of Book : ");
-                        String bTopic = vval.nextLine();
+                        // For Multiple Topics 
+                        List<String> bTopicList = new ArrayList<>();
+                        System.out.println("Enter the Topic Names, Type 'Done' to Stop");
 
-                        System.out.println("Enter the Selling Price : ");
+                        while (true) {
+                            System.out.print("Topic (" +(bTopicList.size()+ 1) +") : ");
+                            String topicInput = vval.nextLine().trim();
+
+                            if(topicInput.equalsIgnoreCase("done")){
+                                break;
+                            }
+
+                            if(!topicInput.isEmpty()){
+                                bTopicList.add(topicInput);
+
+                            }
+                            // System.out.println("Topics list : "+bTopicList);
+                        }
+
+                        System.out.print("Enter the Selling Price : ");
                         float bPrice = vval.nextFloat();
                         vval.nextLine();
 
@@ -61,17 +79,16 @@ public class LibraryApp{
 
                         LocalDate bPDate = LocalDate.of(year, month, day);
 
-                        Book bookadd = new Book(bname, bAuthor, bTopic, bPrice, bPDate);
+                        Book bookadd = new Book(bname, bAuthor, bTopicList, bPrice, bPDate);
                         library.addBooks(bookadd);
 
                         library.displayCounts();
-
-                        vval.close();
-
+                        
                     }
 
                     case 2 -> {
                         System.out.println("Displaying all the books -> ");
+                        library.displayBooks();
                     }
 
                     case 3 -> {

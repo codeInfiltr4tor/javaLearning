@@ -19,5 +19,25 @@ public class Library{
         System.out.println("Total Books Count is : "+this.books.size());
     }
 
+    public void displayBooks(){
+
+        if(this.books.isEmpty()){
+            System.out.println("No Books Added.");
+        }
+        else {
+            
+            for(Book book : this.books){
+                String topicString = String.join(",",book.getTopic());
+                
+                System.out.println("Title : "+book.getName()+
+                " | Author : "+book.getAuthor()+
+                " | Topic : ["+topicString+"]"+
+                " | Price : "+book.getPrice()+
+                " | Published Date : "+book.getPublishDate());  
+            }
+        }
+
+    }
+
 }
 

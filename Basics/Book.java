@@ -1,14 +1,16 @@
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 public class Book{
 
-    private String name,author,topic;
+    private String name,author;
+    private List<String> topic;
     private float price;
     private LocalDate publishedDate;
 
-    public Book(String bname, String bauthor, String btopic, float bprice, LocalDate bpublishDate){
+    public Book(String bname, String bauthor, List<String> btopic, float bprice, LocalDate bpublishDate){
 
         this.name = bname;
         this.author = bauthor;
@@ -28,7 +30,7 @@ public class Book{
         return this.author;
     }
 
-    public String getTopic(){
+    public List<String> getTopic(){
         return this.topic;
     }
 
@@ -50,7 +52,7 @@ public class Book{
         this.name = Name;
     }
 
-    public void setTopic(String topic){
+    public void setTopic(List<String> topic){
         this.topic = topic;
     }
 
