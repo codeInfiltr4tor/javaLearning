@@ -4,6 +4,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class DatabaseExecutionService {
@@ -37,5 +38,26 @@ public class DatabaseExecutionService {
         // jdbcTemplate.queryForList handles execution and mapping of results
         return jdbcTemplate.queryForList(sqlQuery);
     }
+
+    /**
+     * Extracts the DDL (CREATE TABLE statements) for all user tables in the SQLite database.
+     * This query filters out internal SQLite tables and Hibernate sequence tables.
+     * * @return A single string containing all DDL statements, separated by newlines.
+     */
+    public String getDatabaseSchemaDdl() {
+        // Query SQLite's internal schema table to get the CREATE TABLE statements
+        String query = "SELECT sql FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE 'hibernate_sequence'";
+
+        // Execute the query and map the result set to a List of Strings
+        List<String> ddlStatements = jdbcTemplate.query(query, (rs, rowNum) -> {
+            return rs.getString("sql");
+        });
+
+        // Join the list of DDL strings into a single, newline-separated string
+        return ddlStatements.stream()
+                .filter(ddl -> ddl != null && !ddl.trim().isEmpty())
+                .collect(Collectors.joining("\n\n"));
+    }
+
 }
 

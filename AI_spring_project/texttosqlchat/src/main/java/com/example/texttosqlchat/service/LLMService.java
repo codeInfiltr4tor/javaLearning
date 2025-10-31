@@ -14,6 +14,7 @@ public class LLMService {
 
     private final WebClient webClient;
     private final String llmModel;
+    private final DatabaseExecutionService dbExecutionService;
 
 //     Define the specific API path for chat completions
     private static final String CHAT_COMPLETION_PATH = "/chat/completions";
@@ -23,9 +24,10 @@ public class LLMService {
             WebClient.Builder webClientBuilder,
             @Value("${llm.api.base-url}") String baseUrl,
             @Value("${llm.api.model}") String model,
-            @Value("${llm.api.key}") String apiKey) {
+            @Value("${llm.api.key}") String apiKey, DatabaseExecutionService dbExecutionService) {
+        this.dbExecutionService = dbExecutionService;
 
-            // Configure WebClient for calling the LLM API
+        // Configure WebClient for calling the LLM API
             // NOTE: We rely on the base URL being structured correctly (e.g., https://router.huggingface.co/v1)
         this.webClient = webClientBuilder
                 .baseUrl(baseUrl)
@@ -43,7 +45,7 @@ public class LLMService {
     public String generateSqlQuery(String naturalLanguageQuery) {
 
         // 1. Define the system instruction (Schema + Rules)
-        String schema = "CREATE TABLE book (id INTEGER PRIMARY KEY, title TEXT, author TEXT, publication_year INTEGER);" +
+        /* String schema = "CREATE TABLE book (id INTEGER PRIMARY KEY, title TEXT, author TEXT, publication_year INTEGER);" +
                 "CREATE TABLE customers (\n" +
                 "    id INTEGER PRIMARY KEY,\n" +
                 "    name TEXT NOT NULL,\n" +
@@ -82,6 +84,11 @@ public class LLMService {
                 "    method TEXT,\n" +
                 "    FOREIGN KEY (order_id) REFERENCES orders(id)\n" +
                 ");\n";
+
+         */
+
+        String schema = dbExecutionService.getDatabaseSchemaDdl();
+//        System.out.println("Executing Lddl: " + schema);
 
         String systemInstruction = String.format(
                 "You are a helpful assistant that translates natural language questions into SQLite queries. " +
